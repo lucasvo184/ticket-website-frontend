@@ -1,13 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Tắt thông báo lỗi trong production
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   eslint: {
     ignoreDuringBuilds: true,
   },
-  //output: 'export',
-}
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  images: {
+    unoptimized: true,
+  },
+  // ❌ XÓA dòng này nếu có:
+  // output: 'export',
+};
 
-module.exports = nextConfig 
+module.exports = nextConfig;
