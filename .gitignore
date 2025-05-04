@@ -1,0 +1,12 @@
+# .gitignore (đặt ở root)
+
+# Ignore Next.js build output
+.next
+out
+
+# Ignore dependencies
+node_modules
+
+# Ignore logs and env
+*.log
+.env*
