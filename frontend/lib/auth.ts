@@ -111,7 +111,7 @@ export const login = async (
   try {
     console.log("Đang đăng nhập với:", userName);
     
-    const response = await fetch("http://localhost:8080/dang-nhap", {
+    const response = await fetch("https://ticket-website-backend-production.up.railway.app/dang-nhap", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -155,7 +155,7 @@ export const login = async (
  */
 export const logout = async (): Promise<{success: boolean, message: string}> => {
   try {
-    const response = await fetch("http://localhost:8080/dang-xuat", {
+    const response = await fetch("https://ticket-website-backend-production.up.railway.app/dang-xuat", {
       method: "POST",
       credentials: "include",
     });
