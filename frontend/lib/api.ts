@@ -4,7 +4,7 @@ import type { Payment, PreparePaymentRequest } from "@/app/api/payments/prepare/
 import type { Trip } from "@/app/api/trips/route"
 import axios from 'axios'
 
-const API_BASE_URL = 'https://ticket-website-backend-production.up.railway.app/api'
+const API_BASE_URL = 'https://ticket-website-backend-production.up.railway.app'
 
 export const api = axios.create({
   baseURL: API_BASE_URL,

@@ -1,5 +1,7 @@
 import { fetchApi } from './api';
 
+const API_BASE_URL = 'https://ticket-website-backend-production.up.railway.app';
+
 // Hàm utility cho việc quản lý authentication
 
 /**
@@ -94,14 +96,24 @@ export const login = async (
   try {
     console.log("Đang đăng nhập với:", userName);
     
-    const data = await fetchApi('/dang-nhap', {
+    const response = await fetch(`${API_BASE_URL}/dang-nhap`, {
       method: 'POST',
-      body: new URLSearchParams({
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
         name: userName,
         password: password,
       }),
     });
     
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Đăng nhập thất bại');
+    }
+    
+    const data = await response.json();
     console.log("Đăng nhập thành công, userId:", data.userId);
     saveLoginInfo(data.userName, data.userType, data.userId || "3");
     return {
@@ -114,7 +126,7 @@ export const login = async (
     console.error("Login error:", error);
     return {
       success: false,
-      message: "Không thể kết nối đến server"
+      message: error instanceof Error ? error.message : "Không thể kết nối đến server"
     };
   }
 };
