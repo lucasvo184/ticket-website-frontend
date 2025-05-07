@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
     const { tripId, seatId, userId, amount } = body;
 
     // Gọi API backend để cập nhật trạng thái
-    const response = await fetch('http://localhost:8080/api/payment/complete', {
+    const response = await fetch('https://ticket-website-backend-production.up.railway.app/api/payment/complete', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

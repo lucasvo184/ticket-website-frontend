@@ -6,7 +6,7 @@ export async function POST(request: Request, { params }: { params: { paymentId: 
     const paymentId = params.paymentId
 
     // Call the Spring Boot API to process payment
-    const response = await fetch(`http://localhost:8080/api/payments/process/${paymentId}`, {
+    const response = await fetch(`https://ticket-website-backend-production.up.railway.app/api/payments/process/${paymentId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

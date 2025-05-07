@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { amount, tripId } = body;
 
-    const response = await fetch('http://localhost:8080/api/payment/create', {
+    const response = await fetch('https://ticket-website-backend-production.up.railway.app/api/payment/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
