@@ -1,20 +1,13 @@
 import { NextResponse } from 'next/server';
 
+const backendUrl = 'https://ticket-website-backend-production.up.railway.app';
+
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
     const seatId = params.id;
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL;
-    
-    if (!backendUrl) {
-      console.error('Backend URL not configured');
-      return NextResponse.json(
-        { error: 'Chưa cấu hình kết nối đến máy chủ' },
-        { status: 500 }
-      );
-    }
     
     console.log('Fetching seat details for ID:', seatId, 'from:', backendUrl);
     

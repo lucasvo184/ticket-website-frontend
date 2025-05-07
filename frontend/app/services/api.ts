@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://ticket-website-backend-production.up.railway.app';
+const BASE_URL = 'https://ticket-website-backend-production.up.railway.app/api';
 
 export interface Trip {
   id: number;
