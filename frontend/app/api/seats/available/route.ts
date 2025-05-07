@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { fetchApi } from '@/lib/api'
 
 // Define types based on the Java models
 export interface Seat {
@@ -11,27 +12,9 @@ export interface Seat {
   }
 }
 
-const backendUrl = 'https://ticket-website-backend-production.up.railway.app'
-
 export async function GET() {
   try {
-    // Call the Spring Boot API to get available seats
-    const response = await fetch(`${backendUrl}/api/seats/available`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-
-    if (!response.ok) {
-      const error = await response.json()
-      return NextResponse.json(
-        { error: error.message || 'Failed to fetch available seats' },
-        { status: response.status }
-      )
-    }
-
-    const seats: Seat[] = await response.json()
+    const seats = await fetchApi('/seats/available')
     return NextResponse.json(seats)
   } catch (error) {
     console.error("Error fetching available seats:", error)

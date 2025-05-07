@@ -2,6 +2,37 @@ import type { Seat } from "@/app/api/seats/available/route"
 import type { Ticket, BookTicketRequest } from "@/app/api/tickets/book/route"
 import type { Payment, PreparePaymentRequest } from "@/app/api/payments/prepare/route"
 import type { Trip } from "@/app/api/trips/route"
+import axios from 'axios'
+
+const API_BASE_URL = 'https://ticket-website-backend-production.up.railway.app/api'
+
+export const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  withCredentials: true
+})
+
+export const fetchApi = async (endpoint: string, options: RequestInit = {}) => {
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    ...options,
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  })
+
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.message || 'API request failed')
+  }
+
+  return response.json()
+}
+
+export default api
 
 // Function to fetch available seats
 export async function getAvailableSeats(): Promise<Seat[]> {

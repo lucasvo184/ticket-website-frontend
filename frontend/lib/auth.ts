@@ -1,3 +1,5 @@
+import { fetchApi } from './api';
+
 // Hàm utility cho việc quản lý authentication
 
 /**
@@ -63,42 +65,23 @@ const setCookie = (name: string, value: string, days: number = 1): void => {
 };
 
 /**
- * Lưu thông tin đăng nhập vào session
+ * Lưu thông tin đăng nhập
  */
-export const saveLoginInfo = (userName: string, userType: string, userId: string): void => {
-  if (typeof window === 'undefined') return;
-
-  // Lưu vào sessionStorage
+const saveLoginInfo = (userName: string, userType: string, userId: string) => {
+  sessionStorage.setItem("isLoggedIn", "true");
   sessionStorage.setItem("userName", userName);
   sessionStorage.setItem("userType", userType);
   sessionStorage.setItem("userId", userId);
-  sessionStorage.setItem("isLoggedIn", "true");
-  
-  // Lưu thêm vào cookie (phòng trường hợp backend chưa lưu được cookie)
-  setCookie("userId", userId);
-  setCookie("userName", userName);
-  
-  console.log("Đã lưu userId vào cookie và session:", userId);
-  
-  // Kích hoạt event để thông báo cho các component khác
-  window.dispatchEvent(new Event('storage'));
 };
 
 /**
- * Xóa thông tin đăng nhập khỏi session
+ * Xóa thông tin đăng nhập
  */
-export const clearLoginInfo = (): void => {
+const clearLoginInfo = () => {
+  sessionStorage.removeItem("isLoggedIn");
   sessionStorage.removeItem("userName");
   sessionStorage.removeItem("userType");
   sessionStorage.removeItem("userId");
-  sessionStorage.removeItem("isLoggedIn");
-  
-  // Xóa cookies
-  setCookie("userId", "", -1);
-  setCookie("userName", "", -1);
-  
-  // Kích hoạt event để thông báo cho các component khác
-  window.dispatchEvent(new Event('storage'));
 };
 
 /**
@@ -111,36 +94,22 @@ export const login = async (
   try {
     console.log("Đang đăng nhập với:", userName);
     
-    const response = await fetch("https://ticket-website-backend-production.up.railway.app/dang-nhap", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Accept": "application/json",
-      },
-      credentials: "include", // Quan trọng để nhận cookies từ server
+    const data = await fetchApi('/dang-nhap', {
+      method: 'POST',
       body: new URLSearchParams({
         name: userName,
         password: password,
       }),
     });
-
-    const data = await response.json();
     
-    if (response.ok) {
-      console.log("Đăng nhập thành công, userId:", data.userId);
-      saveLoginInfo(data.userName, data.userType, data.userId || "3"); // Mặc định là 3 nếu không có userId
-      return {
-        success: true,
-        message: "Đăng nhập thành công",
-        userType: data.userType,
-        userId: data.userId
-      };
-    } else {
-      return {
-        success: false,
-        message: data.error || "Đăng nhập thất bại"
-      };
-    }
+    console.log("Đăng nhập thành công, userId:", data.userId);
+    saveLoginInfo(data.userName, data.userType, data.userId || "3");
+    return {
+      success: true,
+      message: "Đăng nhập thành công",
+      userType: data.userType,
+      userId: data.userId
+    };
   } catch (error) {
     console.error("Login error:", error);
     return {
@@ -155,24 +124,16 @@ export const login = async (
  */
 export const logout = async (): Promise<{success: boolean, message: string}> => {
   try {
-    const response = await fetch("https://ticket-website-backend-production.up.railway.app/dang-xuat", {
-      method: "POST",
-      credentials: "include",
+    await fetchApi('/dang-xuat', {
+      method: 'POST',
     });
     
     clearLoginInfo();
     
-    if (response.ok) {
-      return {
-        success: true,
-        message: "Đăng xuất thành công"
-      };
-    } else {
-      return {
-        success: false,
-        message: "Đăng xuất thất bại"
-      };
-    }
+    return {
+      success: true,
+      message: "Đăng xuất thành công"
+    };
   } catch (error) {
     console.error("Logout error:", error);
     

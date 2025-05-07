@@ -1,17 +1,13 @@
 import { NextResponse } from 'next/server';
-
-const backendUrl = 'https://ticket-website-backend-production.up.railway.app';
+import { fetchApi } from '@/lib/api';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     console.log('Creating booking:', body);
 
-    const response = await fetch(`${backendUrl}/api/bookings/create`, {
+    const data = await fetchApi('/bookings/create', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify({
         seatId: body.seatId,
         tripId: body.tripId,
@@ -20,12 +16,6 @@ export async function POST(request: Request) {
         passengerEmail: body.passengerEmail
       })
     });
-
-    const data = await response.json();
-    
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to create booking');
-    }
 
     return NextResponse.json(data);
   } catch (error) {
